@@ -1,31 +1,11 @@
+
 import pandas as pd
 import re
 import os
 
-# Caminho da pasta onde está o arquivo
 DATA_DIR = "Data"
 DATA_FILTRADO = "Data/Filtrados"
 
-# Nome do arquivo de entrada
-# FILENAME = "interrupcoes-energia-eletrica-2024.csv"
-# FILENAME = "interrupcoes-energia-eletrica-2023.csv"
-# FILENAME = "interrupcoes-energia-eletrica-2022.csv"
-# FILENAME = "interrupcoes-energia-eletrica-2021.csv"
-FILENAME = "interrupcoes-energia-eletrica-2020.csv"
-
-# Monta o caminho completo do arquivo
-input_file = os.path.join(DATA_DIR, FILENAME)
-
-# Lê o dataset
-df = pd.read_csv(
-    input_file,
-    sep=';',
-    dtype=str,
-    encoding='latin1',
-    low_memory=False
-)
-
-# FIltra apenas interrupções relacionadas a RGE do RS e também cidades específicas
 conjuntos = [
     'Passo Fundo 1',
     'PORTO ALEGRE 1',
@@ -58,12 +38,6 @@ conjuntos = [
     'Lagoa Vermelha'
 ]
 
-df_rge_sul = df[
-    df['SigAgente'].str.contains('RGE SUL', na=False) &
-    df['DscConjuntoUnidadeConsumidora'].isin(conjuntos)
-]
-
-# Lista de valores a excluir (sem relação com eventos climáticos)
 valores_excluir = [
     "Interna;Nao Programada;Terceiros;Ligacao clandestina",
     "Interna;Nao Programada;Meio Ambiente;Animais",
@@ -79,12 +53,29 @@ valores_excluir = [
     "Interna;Programada;Alteracao;Para ampliacao"
 ]
 
-# Remove as linhas com essas descrições
-regex_excluir = "|".join(map(re.escape, valores_excluir))
-df_rge_sul = df_rge_sul[~df_rge_sul['DscFatoGeradorInterrupcao'].str.contains(regex_excluir, na=False)]
+def processar_csv_aneel(input_file, output_file):
+    df = pd.read_csv(input_file, sep=';', dtype=str, encoding='latin1', low_memory=False)
+    df_rge_sul = df[
+        df['SigAgente'].str.contains('RGE SUL', na=False) &
+        df['DscConjuntoUnidadeConsumidora'].isin(conjuntos)
+    ]
+    regex_excluir = "|".join(map(re.escape, valores_excluir))
+    df_rge_sul = df_rge_sul[~df_rge_sul['DscFatoGeradorInterrupcao'].str.contains(regex_excluir, na=False)]
+    df_rge_sul.to_csv(output_file, index=False, sep=';')
+    print(f'✅ Arquivo salvo: {output_file}')
 
-# Salva o arquivo filtrado na pasta Data
-output_file = os.path.join(DATA_FILTRADO, "interrupcoes_rge_sul_filtrado.csv")
-df_rge_sul.to_csv(output_file, index=False, sep=';')
+def processar_todos_csvs():
+    if not os.path.exists(DATA_FILTRADO):
+        os.makedirs(DATA_FILTRADO)
+    for file in os.listdir(DATA_DIR):
+        if file.endswith('.csv') and file.startswith('interrupcoes-energia-eletrica-'):
+            ano = file.split('-')[-1].replace('.csv', '')
+            input_path = os.path.join(DATA_DIR, file)
+            output_path = os.path.join(DATA_FILTRADO, f'interrupcoes_rge_sul_filtrado_{ano}.csv')
+            try:
+                processar_csv_aneel(input_path, output_path)
+            except Exception as e:
+                print(f'❌ Erro ao processar {input_path}: {e}')
 
-print(f'✅ Arquivo salvo: {output_file}')
+if __name__ == "__main__":
+    processar_todos_csvs()

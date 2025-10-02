@@ -8,10 +8,7 @@ def juntar_datasets(
     inmet_dir='../INMET/Data/Filtrados',
     saida_dir='Data',
 ):
-    """
-    Junta os datasets filtrados de ANEEL e INMET por Data e Hora (UTC),
-    salvando um novo CSV com as informações combinadas.
-    """
+
     if not os.path.exists(saida_dir):
         os.makedirs(saida_dir)
 

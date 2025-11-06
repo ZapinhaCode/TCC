@@ -40,11 +40,6 @@ def processar_csv_aneel(input_file, output_file):
     
     regex_excluir = "|".join(map(re.escape, valores_excluir))
     df_rge_sul = df_rge_sul[~df_rge_sul['DscFatoGeradorInterrupcao'].str.contains(regex_excluir, na=False)]
-    
-    df_rge_sul.loc[
-        df_rge_sul['DscConjuntoUnidadeConsumidora'].str.startswith('PORTO ALEGRE', na=False), 
-        'DscConjuntoUnidadeConsumidora'
-    ] = 'Porto Alegre'
 
     df_rge_sul.loc[
         df_rge_sul['DscConjuntoUnidadeConsumidora'].str.upper().str.startswith('SANTA MARIA', na=False), 

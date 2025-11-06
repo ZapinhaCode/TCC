@@ -1,4 +1,3 @@
-
 import pandas as pd
 import re
 import os
@@ -8,27 +7,6 @@ DATA_FILTRADO = "Data/Filtrados"
 
 conjuntos = [
     'Passo Fundo 1',
-    'PORTO ALEGRE 1',
-    'PORTO ALEGRE 2',
-    'PORTO ALEGRE 3',
-    'PORTO ALEGRE 4 - CENTRO',
-    'PORTO ALEGRE 4 - CENTRO 2',
-    'PORTO ALEGRE 5',
-    'PORTO ALEGRE 6',
-    'PORTO ALEGRE 7',
-    'PORTO ALEGRE 8',
-    'PORTO ALEGRE 9',
-    'PORTO ALEGRE 10',
-    'PORTO ALEGRE 11',
-    'PORTO ALEGRE 12',
-    'PORTO ALEGRE 13',
-    'PORTO ALEGRE 14',
-    'PORTO ALEGRE 15',
-    'PORTO ALEGRE 16',
-    'PORTO ALEGRE 17',
-    'PORTO ALEGRE 18',
-    'PORTO ALEGRE 19',
-    'PORTO ALEGRE 20',
     'Santa Maria',
     'SANTA MARIA',
     'SANTA MARIA 1',
@@ -59,8 +37,25 @@ def processar_csv_aneel(input_file, output_file):
         df['SigAgente'].str.contains('RGE SUL', na=False) &
         df['DscConjuntoUnidadeConsumidora'].isin(conjuntos)
     ]
+    
     regex_excluir = "|".join(map(re.escape, valores_excluir))
     df_rge_sul = df_rge_sul[~df_rge_sul['DscFatoGeradorInterrupcao'].str.contains(regex_excluir, na=False)]
+    
+    df_rge_sul.loc[
+        df_rge_sul['DscConjuntoUnidadeConsumidora'].str.startswith('PORTO ALEGRE', na=False), 
+        'DscConjuntoUnidadeConsumidora'
+    ] = 'Porto Alegre'
+
+    df_rge_sul.loc[
+        df_rge_sul['DscConjuntoUnidadeConsumidora'].str.upper().str.startswith('SANTA MARIA', na=False), 
+        'DscConjuntoUnidadeConsumidora'
+    ] = 'Santa Maria'
+
+    df_rge_sul.loc[
+        df_rge_sul['DscConjuntoUnidadeConsumidora'].str.upper().str.startswith('PASSO FUNDO', na=False), 
+        'DscConjuntoUnidadeConsumidora'
+    ] = 'Passo Fundo'
+
     df_rge_sul.to_csv(output_file, index=False, sep=';')
     print(f'✅ Arquivo salvo: {output_file}')
 

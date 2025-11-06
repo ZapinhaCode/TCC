@@ -15,16 +15,15 @@ from sklearn.metrics import (
 # Defina os diretórios base conforme a estrutura do seu projeto
 ANEEL_DIR = '../ANEEL/Data/Filtrados'
 INMET_DIR = '../INMET/Data/Filtrados'
-SAIDA_DIR = 'Data/XGBoost'  # MUDANÇA: Diretório de saída do XGBoost
+SAIDA_DIR = 'Data/XGBoost'
 
-# Anos para processar (AJUSTADO: Alinhado com o log de console, que parou em 2023)
-ANOS = list(range(2020, 2024))  # 2020, 2021, 2022, 2023
+# Anos para processar
+ANOS = list(range(2020, 2024))
 
 # Mapeia o nome do filtro (ANEEL) para o nome do arquivo (INMET)
 CIDADES_CONFIG = {
     'Lagoa Vermelha': 'LagoaVermelha_filtrado.csv',
     'Passo Fundo': 'PassoFundo_filtrado.csv',
-    'Porto Alegre': 'PortoAlegre_filtrado.csv',
     'Santa Maria': 'SantaMaria_filtrado.csv'
 }
 
@@ -119,7 +118,7 @@ def preprocess_and_merge_data(df_clima_raw, df_aneel_raw, cidade_nome_filtro):
 
     # --- 4.1. Processamento INMET (Clima) ---
     df_clima = df_clima_raw.copy()
-    # Renomeia colunas para consistência (exemplo do script anterior)
+    # Renomeia colunas para consistência
     df_clima = df_clima.rename(columns={'Data': 'Data', 'Hora (UTC)': 'Hora'})
 
     # Garante que as colunas de features existem antes de converter
@@ -158,7 +157,7 @@ def preprocess_and_merge_data(df_clima_raw, df_aneel_raw, cidade_nome_filtro):
             return None
 
     df_clima = df_clima.dropna(subset=['Datetime'])
-    df_clima = df_clima.drop_duplicates(subset=['Datetime']) # Garante unicidade
+    df_clima = df_clima.drop_duplicates(subset=['Datetime'])
     df_clima = df_clima.set_index('Datetime')
 
     # Agrupar dados por hora (resample) para garantir 1 registro/hora
@@ -174,7 +173,6 @@ def preprocess_and_merge_data(df_clima_raw, df_aneel_raw, cidade_nome_filtro):
     df_aneel = df_aneel_raw.copy()
     
     # Filtro 1: Apenas a cidade de interesse
-    # (Ajuste: usar regex \b para garantir a palavra exata, ex: 'Porto Alegre' e não 'Alegrete')
     cidade_regex = r'\b' + pd.Series(cidade_nome_filtro).str.replace(r'[^\w\s]', '', regex=True)[0] + r'\b'
     df_aneel_cidade = df_aneel[
         df_aneel['DscConjuntoUnidadeConsumidora'].str.contains(cidade_regex, case=False, na=False, regex=True)
@@ -307,10 +305,10 @@ Total de eventos de interrupção real: {df_final[TARGET].sum()}
     
     # Grade de parâmetros para XGBoost
     param_grid = {
-        'n_estimators': [100, 200],         # Reduzido para velocidade
-        'max_depth': [3, 5, 7],             # XGBoost geralmente prefere árvores mais rasas
+        'n_estimators': [100, 200],
+        'max_depth': [3, 5, 7],
         'learning_rate': [0.01, 0.1],
-        'gamma': [0, 0.1]                 # Para regularização
+        'gamma': [0, 0.1]
     }
     
     # Instancia o XGBoost com o balanceamento de classe
@@ -319,7 +317,6 @@ Total de eventos de interrupção real: {df_final[TARGET].sum()}
         n_jobs=-1,
         scale_pos_weight=scale_pos_weight, # Aplica o balanceamento
         eval_metric='logloss'
-        # use_label_encoder=False # Removido, obsoleto em versões recentes
     )
     
     # Usando F1 como métrica de otimização
@@ -419,7 +416,6 @@ Importância das Features (Baseada em Gain - XGBoost):
     except Exception as e:
         print(f"\n[ERRO] Falha ao salvar relatório em {report_path}: {e}")
 
-
 # --- 6. EXECUÇÃO PRINCIPAL ---
 
 def main():
@@ -460,7 +456,6 @@ def main():
         train_and_evaluate_model(df_processed, cidade_nome_filtro, SAIDA_DIR)
 
     print(f"\n{'='*70}\nPipeline concluído para todas as cidades.\n{'='*70}")
-
 
 if __name__ == "__main__":
     main()

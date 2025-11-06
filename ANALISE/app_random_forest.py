@@ -17,15 +17,13 @@ ANEEL_DIR = '../ANEEL/Data/Filtrados'
 INMET_DIR = '../INMET/Data/Filtrados'
 SAIDA_DIR = 'Data/Random Forest'
 
-# Anos para processar (AJUSTADO: Alinhado com o log de console, que parou em 2023)
-ANOS = list(range(2020, 2024))  # 2020, 2021, 2022, 2023
+# Anos para processar
+ANOS = list(range(2020, 2024))
 
 # Mapeia o nome do filtro (ANEEL) para o nome do arquivo (INMET)
-# (CORRIGIDO: Adicionado _filtrado.csv aos nomes dos arquivos INMET)
 CIDADES_CONFIG = {
     'Lagoa Vermelha': 'LagoaVermelha_filtrado.csv',
     'Passo Fundo': 'PassoFundo_filtrado.csv',
-    'Porto Alegre': 'PortoAlegre_filtrado.csv',
     'Santa Maria': 'SantaMaria_filtrado.csv'
 }
 
@@ -121,7 +119,7 @@ def preprocess_and_merge_data(df_clima_raw, df_aneel_raw, cidade_nome_filtro):
 
     # --- 4.1. Processamento INMET (Clima) ---
     df_clima = df_clima_raw.copy()
-    # Renomeia colunas para consistência (exemplo do script anterior)
+    # Renomeia colunas para consistência
     df_clima = df_clima.rename(columns={'Data': 'Data', 'Hora (UTC)': 'Hora'})
 
     # Garante que as colunas de features existem antes de converter
@@ -176,7 +174,6 @@ def preprocess_and_merge_data(df_clima_raw, df_aneel_raw, cidade_nome_filtro):
     df_aneel = df_aneel_raw.copy()
     
     # Filtro 1: Apenas a cidade de interesse
-    # (Ajuste: usar regex \b para garantir a palavra exata, ex: 'Porto Alegre' e não 'Alegrete')
     cidade_regex = r'\b' + pd.Series(cidade_nome_filtro).str.replace(r'[^\w\s]', '', regex=True)[0] + r'\b'
     df_aneel_cidade = df_aneel[
         df_aneel['DscConjuntoUnidadeConsumidora'].str.contains(cidade_regex, case=False, na=False, regex=True)
@@ -204,7 +201,7 @@ def preprocess_and_merge_data(df_clima_raw, df_aneel_raw, cidade_nome_filtro):
     df_interrupcoes_reais['DatetimeInicio'] = pd.to_datetime(df_interrupcoes_reais['DatInicioInterrupcao'], errors='coerce')
     df_interrupcoes_reais = df_interrupcoes_reais.dropna(subset=['DatetimeInicio'])
     
-    # Arredonda para o "chão" da hora (ex: 14:59 -> 14:00)
+    # Arredonda para o "chão" da hora
     df_interrupcoes_reais['HoraInterrupcao'] = df_interrupcoes_reais['DatetimeInicio'].dt.floor('H')
 
     # Marcar horas com interrupções reais (Target)
@@ -453,7 +450,6 @@ def main():
         train_and_evaluate_model(df_processed, cidade_nome_filtro, SAIDA_DIR)
 
     print(f"\n{'='*70}\nPipeline concluído para todas as cidades.\n{'='*70}")
-
 
 if __name__ == "__main__":
     main()

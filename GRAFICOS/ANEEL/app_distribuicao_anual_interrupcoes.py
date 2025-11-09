@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-DATA_FILTRADOS = "../ANEEL/Data/Filtrados"
+DATA_FILTRADOS = "../../ANEEL/Data/Filtrados"
 
 arquivos_csv = [
     'interrupcoes_rge_sul_filtrado_2020.csv',
@@ -42,7 +42,7 @@ if df_total.empty:
 contagem_por_ano = df_total['Ano'].value_counts().sort_index()
 
 # Garante que a pasta Images existe
-images_dir = 'Images'
+images_dir = '../Images/ANEEL'
 os.makedirs(images_dir, exist_ok=True)
 sns.set_style("whitegrid")
 plt.figure(figsize=(10, 6))

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-DATA_FILTRADOS = "../ANEEL/Data/Filtrados"
+DATA_FILTRADOS = "../../ANEEL/Data/Filtrados"
 
 arquivos_csv = [
     'interrupcoes_rge_sul_filtrado_2020.csv',
@@ -72,7 +72,7 @@ if df_final.empty:
     exit()
 
 # Garante que a pasta Images existe
-images_dir = 'Images'
+images_dir = '../Images/ANEEL'
 os.makedirs(images_dir, exist_ok=True)
 
 print(f"✅ Total de registros climáticos para análise: {len(df_final)}")

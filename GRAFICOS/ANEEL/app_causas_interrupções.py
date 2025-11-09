@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Diretório dos arquivos ANEEL filtrados
-aneel_filtrados_dir = '../ANEEL/Data/Filtrados'
+aneel_filtrados_dir = '../../ANEEL/Data/Filtrados'
 anos = ['2020', '2021', '2022', '2023', '2024']
 
 # Lista para armazenar todas as interrupções
@@ -29,6 +29,10 @@ cidade_col = 'DscConjuntoUnidadeConsumidora'
 # Contagem total de interrupções por cidade
 contagem = df_total[cidade_col].value_counts().sort_values(ascending=False)
 
+# Garante que a pasta Images/ANEEL existe
+images_dir = os.path.join('../Images', 'ANEEL')
+os.makedirs(images_dir, exist_ok=True)
+
 # Gráfico
 plt.figure(figsize=(10, 6))
 contagem.plot(kind='bar')
@@ -36,5 +40,5 @@ plt.title('Contagem total de interrupções por cidade')
 plt.xlabel('Cidade')
 plt.ylabel('Número de interrupções')
 plt.tight_layout()
-plt.savefig('contagem_interrupcoes_por_cidade.png')
+plt.savefig(os.path.join(images_dir, 'contagem_interrupcoes_por_cidade.png'))
 plt.show()

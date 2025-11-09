@@ -25,14 +25,14 @@ if not df_list:
 
 # Junta todos os anos e cidades
 df_total = pd.concat(df_list, ignore_index=True)
+
 variaveis = [
-    'Chuva (mm)', 'Raj. Vento (m/s)', 'Temp. Max. (C)', 'Temp. Min. (C)',
-    'Umi. Max. (%)', 'Umi. Min. (%)', 'Pressao Max. (hPa)', 'Pressao Min. (hPa)', 'Radiacao (KJ/m²)'
+    'Temp. Ins. (C)', 'Vel. Vento (m/s)', 'Raj. Vento (m/s)', 'Pressao Ins. (hPa)', 'Chuva (mm)'
 ]
 variaveis = [v for v in variaveis if v in df_total.columns]
 
 if not variaveis:
-    print("Nenhuma variável climática encontrada nos arquivos filtrados.")
+    print("Nenhuma das variáveis desejadas encontrada nos arquivos filtrados.")
     print("Colunas disponíveis:", df_total.columns.tolist())
     exit()
 

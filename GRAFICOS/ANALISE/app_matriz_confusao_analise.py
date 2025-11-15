@@ -6,14 +6,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def parse_report(file_path):
-    """
-    Lê um arquivo de relatório e extrai a cidade, o modelo e a matriz de confusão.
-    """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
-        # Extrair o nome do modelo (XGBoost ou Random Forest)
         if 'xgboost' in os.path.basename(file_path).lower():
             model_name = 'XGBOOST'
         elif 'random_forest' in os.path.basename(file_path).lower():
@@ -21,11 +17,9 @@ def parse_report(file_path):
         else:
             model_name = 'Desconhecido'
 
-        # Extrair o nome da cidade
         city_match = re.search(r'relatorio_(.*)_(xgboost|random_forest)\.txt', os.path.basename(file_path), re.IGNORECASE)
         city_name = city_match.group(1).replace('_', ' ').title() if city_match else 'Desconhecida'
 
-        # Extrair os valores da matriz de confusão
         matrix_match = re.search(r'\[\[\s*(\d+)\s+(\d+)\]\s*\[\s*(\d+)\s+(\d+)\]\]', content)
         if not matrix_match:
             print(f"Aviso: Não foi possível encontrar a matriz no arquivo: {file_path}")
@@ -48,9 +42,6 @@ def parse_report(file_path):
         return None
 
 def plot_confusion_matrices(results, save_path):
-    """
-    Plota uma grade de matrizes de confusão (3 cidades x 2 modelos) e salva como PNG.
-    """
     cities = sorted(list(set(r['city'] for r in results)))
     models = ['XGBOOST', 'RANDOM FOREST']
 
@@ -87,9 +78,7 @@ def plot_confusion_matrices(results, save_path):
     plt.close()
     print(f"✅ Gráfico salvo em: {save_path}")
 
-# --- Execução Principal ---
 if __name__ == "__main__":
-    # Caminhos dos diretórios dos relatórios
     report_dirs = [
         '../../ANALISE/Data/XGBoost',
         '../../ANALISE/Data/Random Forest'

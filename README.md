@@ -7,49 +7,47 @@ Este projeto realiza uma análise detalhada das interrupções de energia elétr
 ---
 
 ## Estrutura do Projeto
-TCC/
-│
-├── ANALISE/
-│ ├── app_xgboost.py
-│ ├── app_random_forest.py
-│ └── Data/
-│ ├── XGBoost/
-│ │ └── relatorio_<cidade>xgboost.txt
-│ └── Random Forest/
-│ └── relatorio<cidade>random_forest.txt
-│
-├── ANEEL/
-│ ├── app.py
-│ └── Data/
-│ ├── interrupcoes-energia-eletrica-2020.csv
-│ ├── ...
-│ └── Filtrados/
-│ └── interrupcoes_rge_sul_filtrado<ano>.csv
-│
-├── INMET/
-│ ├── app.py
-│ └── Data/
-│ ├── <ano>/
-│ │ └── <Cidade>.csv
-│ └── Filtrados/
-│ └── <ano>/<Cidade>_filtrado.csv
-│
-├── GRAFICOS/
-│ ├── ANALISE/
-│ │ └── app_matriz_confusao_analise.py
-│ ├── ANEEL/
-│ │ ├── app_causas_interrupções.py
-│ │ ├── app_distribuicao_anual_interrupcoes.py
-│ │ └── app_graficos_contagem_total_interrupcoes_cidade.py
-│ └── Images/
-│ ├── ANALISE/
-│ └── ANEEL/
-│
-└── README.md
-
-Autor
-Projeto de Trabalho de Conclusão de Curso
-Bernardo (adapte para seu nome completo e orientador, se desejar)
+```
+    TCC/
+    │
+    ├── ANALISE/
+    │ ├── app_xgboost.py
+    │ ├── app_random_forest.py
+    │ └── Data/
+    │ ├── XGBoost/
+    │ │ └── relatorio_<cidade>xgboost.txt
+    │ └── Random Forest/
+    │ └── relatorio<cidade>random_forest.txt
+    │
+    ├── ANEEL/
+    │ ├── app.py
+    │ └── Data/
+    │ ├── interrupcoes-energia-eletrica-2020.csv
+    │ ├── ...
+    │ └── Filtrados/
+    │ └── interrupcoes_rge_sul_filtrado<ano>.csv
+    │
+    ├── INMET/
+    │ ├── app.py
+    │ └── Data/
+    │ ├── <ano>/
+    │ │ └── <Cidade>.csv
+    │ └── Filtrados/
+    │ └── <ano>/<Cidade>_filtrado.csv
+    │
+    ├── GRAFICOS/
+    │ ├── ANALISE/
+    │ │ └── app_matriz_confusao_analise.py
+    │ ├── ANEEL/
+    │ │ ├── app_causas_interrupções.py
+    │ │ ├── app_distribuicao_anual_interrupcoes.py
+    │ │ └── app_graficos_contagem_total_interrupcoes_cidade.py
+    │ └── Images/
+    │ ├── ANALISE/
+    │ └── ANEEL/
+    │
+    └── README.md
+```
 
 ---
 
